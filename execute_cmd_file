@@ -1,0 +1,34 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/wait.h>
+#include "shell.h"
+/**
+ * executeCommandsFromFile - executes command in file
+ */
+
+#define MAX_COMMAND_LENGTH 100
+
+void executeCommandsFromFile(const char *filename)
+{
+	char command[MAX_COMMAND_LENGTH];
+	FILE *file;
+
+	file = fopen(filename, "r");
+	if (file == NULL)
+	{
+		perror("Error opening file");
+		exit(EXIT_FAILURE);
+	}
+	while (fgets(command, sizeof(command), file))
+	{
+		if (strlen(command) > 1)
+		{
+			command[strlen(command) - 1] = '\0';
+			printf("Executing: %s\n", command);
+			executeCommand(command);
+		}
+	}
+	fclose(file);
+}
